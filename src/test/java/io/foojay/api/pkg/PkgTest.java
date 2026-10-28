@@ -22,6 +22,7 @@ package io.foojay.api.pkg;
 import eu.hansolo.jdktools.versioning.VersionNumber;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
@@ -36,5 +37,17 @@ public class PkgTest {
         regular.setBuild(11);
 
         assertTrue(Pkg.toSemver(rebuild).compareTo(Pkg.toSemver(regular)) > 0);
+    }
+
+    @Test
+    public void javaVersionKeepsFifthElement() {
+        VersionNumber rebuild = new VersionNumber(25, 0, 5, 0);
+        rebuild.setFifth(3);
+        rebuild.setBuild(5);
+        VersionNumber regular = new VersionNumber(25, 0, 5, 0);
+        regular.setBuild(11);
+
+        assertEquals("25.0.5.0.3+5", Pkg.toJavaVersion(Pkg.toSemver(rebuild), rebuild));
+        assertEquals("25.0.5+11", Pkg.toJavaVersion(Pkg.toSemver(regular), regular));
     }
 }
